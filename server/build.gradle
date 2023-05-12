@@ -1,0 +1,47 @@
+version '0.1.60'
+
+dependencies {
+    // spring
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.5.RELEASE'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    // jpa-postgres
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
+
+    // oauth lib
+    compile fileTree(dir:'../lib/target', include:['**/*.jar'])
+
+    // model mapper
+    compile 'org.modelmapper:modelmapper:2.3.1'
+    // apache common io
+    implementation 'commons-io:commons-io'
+
+    // tests
+    testCompile 'org.springframework.security:spring-security-test'
+}
+
+apply plugin: 'com.google.cloud.tools.jib'
+
+jib {
+    to {
+        image = "${rootProject.name}-${rootProject.env}-server:${rootProject.version}"
+    }
+    container {
+        ports = ['8000']
+    }
+}
+
+bootRun {
+    // jvm options
+    if (project.hasProperty('jvmArgs')) {
+        jvmArgs project.jvmArgs.split('\\s+')
+    }
+
+    // arguments
+    if (project.hasProperty('args')) {
+        args project.args.split('\\s+')
+    }
+}

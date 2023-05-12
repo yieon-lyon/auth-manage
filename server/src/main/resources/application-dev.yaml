@@ -1,0 +1,31 @@
+## Servers
+server:
+  port: 8000
+  servlet:
+    context-path: /uaa
+
+## Spring
+spring:
+  profiles: dev
+  application:
+    name: auth-server
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: false
+    format_sql: true
+    use_sql_comments: true
+  datasource:
+    hikari:
+      username: auth
+      password: auth1004
+      maximum-pool-size: 12
+      minimum-idle: 5
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:32403/auth
+

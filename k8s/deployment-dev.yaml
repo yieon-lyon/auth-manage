@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: auth
+    namespace: auth
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: auth
+            version: "v1"
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 0
+            maxSurge: 1
+    template:
+        metadata:
+            labels:
+                app: auth
+                version: "v1"
+        spec:
+            hostname: auth
+            subdomain: auth
+            tolerations:
+                - key: "cpu"
+                  operator: "Equal"
+                  value: "true"
+                  effect: "NoSchedule"
+            imagePullSecrets:
+                - name: regcred
+            containers:
+                - name: auth-server
+                  image: localhost:32000/auth-dev-server:0.1.1
+                  env:
+                    - name: SPRING_PROFILES_ACTIVE
+                      value: dev
+                    - name: JAVA_OPTS
+                      value: " -Xmx1024m -Xms1024m"
+                  resources:
+                    requests:
+                      memory: "1024Mi"
+                      cpu: "500m"
+                    limits:
+                      memory: "2048Mi"
+                      cpu: "1"
+                  ports:
+                    - name: http
+                      containerPort: 8000
+                - name: auth-api
+                  image: localhost:32000/auth-dev-api:0.1.1
+                  env:
+                      - name: SPRING_PROFILES_ACTIVE
+                        value: dev
+                      - name: JAVA_OPTS
+                        value: " -Xmx1024m -Xms1024m"
+                  resources:
+                      requests:
+                          memory: "1024Mi"
+                          cpu: "500m"
+                      limits:
+                          memory: "2048Mi"
+                          cpu: "1"
+                  ports:
+                      - name: http1
+                        containerPort: 8001
+            nodeSelector:
+              hardware-type: sstorage
+            hostAliases:
+                - ip: localhost
+                  hostnames:
+                      - kafka.cluster.local
