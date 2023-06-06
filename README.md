@@ -1,4 +1,6 @@
-# TODO  
+# README
+
+- [x] database helm script
 
 ## oauth2 server
 - [x] configuration of security
@@ -6,14 +8,12 @@
 - [x] integration tests for resource server
 - [x] swagger with auth
 - [x] readme
-- [ ] cache jdbc token store
 
 ---  
 
 ## oauth2 client
 
-- [ ] configuration of security
+- [x] configuration of security
 - adds oauth2 client
-    - [ ] facebook
-    - [ ] local
-    - [ ] oauth2 server
+    - [x] local
+    - [x] oauth2 server
